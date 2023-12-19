@@ -31,7 +31,7 @@ const OnlineUsers = ({ all_friends }) => {
 
                 >
                     {
-                        friends_active?.map(friend => <UserCard current_user={current_user} friend={friend} key={friend.id} />)
+                        friends_active?.map((friend , key) => <UserCard current_user={current_user} friend={friend} key={key} />)
                     }
 
 

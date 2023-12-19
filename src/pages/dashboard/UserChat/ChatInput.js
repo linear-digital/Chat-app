@@ -54,7 +54,7 @@ function ChatInput(props) {
             if (imageLink.image) {
                 const newMessage = {
                     sender: current_user?.email,
-                    receiver: selected_user.email,
+                    receiver: selected_user?.email,
                     message: "",
                     type: "file",
                     image: "",
