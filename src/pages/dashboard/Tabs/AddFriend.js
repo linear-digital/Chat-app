@@ -73,10 +73,32 @@ const UserCard = ({ user, currentUser, friends }) => {
 
     }, [user, friends])
     const AddFriend = async () => {
-        setLoading(true) 
-        const newFrind = { user_email: currentUser.email, friend_email: user.email }
-        const isAdded = await request.postData(`/friendlist/check`, newFrind)
+        setLoading(true)
+        const newFrind2 = { friend_email: currentUser.email, user_email: user.email }
+        const isAdded2 = await request.postData(`/friendlist/check`, newFrind2)
+        //Add Friend to friend
+        if (isAdded2?.length === 0) {
+            fetch(`${server_URL}/api/friendlist`, {
+                method: "post",
+                headers: headers,
+                body: JSON.stringify(newFrind2)
+            }).then(res => res.json())
+                .then(json => {
+                    setLoading(false)
+                    dispatch(refetch(json))
+                    // toast.success("Friend Added")
+                })
+        }
+        else {
+            console.log(isAdded)
+            setLoading(false)
+            // toast.error("Friend already added")
+        }
 
+        const newFrind = { user_email: currentUser.email, friend_email: user.email }
+
+        const isAdded = await request.postData(`/friendlist/check`, newFrind)
+        //Adding friend in friendlist of user
         if (isAdded?.length === 0) {
             fetch(`${server_URL}/api/friendlist`, {
                 method: "post",
