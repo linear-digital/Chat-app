@@ -37,6 +37,9 @@ const create = new APIClient().create;
  * Login the user
  * @param {*} payload - username and password 
  */
+
+
+
 function* login({ payload: { username, password, history } }) {
     try {
         if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
@@ -44,7 +47,7 @@ function* login({ payload: { username, password, history } }) {
             yield put(loginUserSuccess(response));
 
         } else {
-            const response = yield call(fetch, 'https://openly-steady-chigger.ngrok-free.app/api/users/login', {
+            const response = yield call(fetch, 'http://localhost:4000/api/users/login', {
                 method: 'POST',
                 body: JSON.stringify({ email: username, password }),
                 headers: { 'Content-Type': 'application/json' }
@@ -67,7 +70,7 @@ function* login({ payload: { username, password, history } }) {
 }
 function* register({ payload: { user, history } }) {
     try {
-        const response = yield call(fetch, 'https://openly-steady-chigger.ngrok-free.app/api/users/new', {
+        const response = yield call(fetch, 'http://localhost:4000/api/users/new', {
             method: 'POST',
             body: JSON.stringify(user),
             headers: { 'Content-Type': 'application/json' }

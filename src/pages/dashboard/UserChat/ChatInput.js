@@ -5,6 +5,8 @@ import { socket } from '..';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
+import MessageTemplate from './ChatBot/MessageTemplate';
+
 function ChatInput(props) {
     const { current_user, selected_user } = useSelector(state => state.ChatPro)
     const [textMessage, settextMessage] = useState("");
@@ -29,6 +31,7 @@ function ChatInput(props) {
     const onEmojiClick = (event) => {
         settextMessage(textMessage + event.emoji);
     };
+    const [SBM, setSBM] = useState("");
 
     //function for file input change
     const handleFileChange = e => {
@@ -45,7 +48,7 @@ function ChatInput(props) {
             setLoading(true)
             const formData = new FormData();
             formData.append("image", selectedFile);
-            const responseIU = await fetch("https://openly-steady-chigger.ngrok-free.app/api/upload-image", {
+            const responseIU = await fetch("http://localhost:4000/api/upload-image", {
                 method: "post",
                 body: formData,
             })
@@ -87,7 +90,7 @@ function ChatInput(props) {
             setLoading(true)
             const formData = new FormData();
             formData.append("image", selectedImage);
-            const responseIU = await fetch("https://openly-steady-chigger.ngrok-free.app/api/upload-image", {
+            const responseIU = await fetch("http://localhost:4000/api/upload-image", {
                 method: "post",
                 body: formData,
             })
@@ -118,11 +121,43 @@ function ChatInput(props) {
 
         }
     }
+    const botChat = async (mes) => {
+        const clientMessage = {
+            sender: current_user?.email,
+            receiver: selected_user?.email,
+            message: mes.title,
+            type: "text",
+            image: "",
+            imageTitle: "",
+            document: "",
+            fileSize: "",
+            fileName: "",
+        }
+        const newMessage = {
+            sender: selected_user?.email,
+            receiver: current_user?.email,
+            message: mes.answers[0],
+            type: "code",
+            image: "",
+            imageTitle: "",
+            document: "",
+            fileSize: "",
+            fileName: "",
+        }
+        try {
+            await socket.emit('new_message', clientMessage)
+            setTimeout(() => {
+                socket.emit('new_message', newMessage)
+            }, 2000)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     //function for send data to onaddMessage function(in userChat/index.js component)
     const onaddMessage = async (e, textMessage) => {
         e.preventDefault();
-
-
+        console.log("first")
         // if text value is not emptry then call onaddMessage function
         if (textMessage !== "") {
             if (textMessage.length < 5000) {
@@ -148,12 +183,13 @@ function ChatInput(props) {
                     setLoading(false)
                 }
             }
-            else{
+            else {
                 toast.error("Text Limit Over")
             }
         }
 
     }
+    const [showSugges, setShowSugges] = useState(false)
 
     return (
         <React.Fragment>
@@ -165,12 +201,19 @@ function ChatInput(props) {
                 </div>
             }
 
-            <div className="chat-input-section p-3 p-lg-4 border-top mb-0 ">
+            <div className="chat-input-section p-3 p-lg-4 border-top mb-0 position-relative" >
+                {
+                    showSugges && selected_user.email === "bot@mdtamiz.com" && <MessageTemplate onDoubleClick={() => setShowSugges(false)} chat={SBM} setChat={setSBM} chatHandler={botChat} />
+                }
+
                 <Form onSubmit={(e) => onaddMessage(e, textMessage)} >
                     <Row className='g-0'>
                         <Col>
                             <div>
-                                <Input type="text" value={textMessage} onChange={handleChange} className="form-control form-control-lg bg-light border-light" placeholder="Enter Message..." />
+                                <Input onClick={() => setShowSugges(true)} type="text" value={textMessage} onChange={(e) => {
+                                    handleChange(e)
+                                    setShowSugges(false)
+                                }} className="form-control form-control-lg bg-light border-light" placeholder="Enter Message..." />
                             </div>
                         </Col>
                         <Col xs="auto">
@@ -182,7 +225,14 @@ function ChatInput(props) {
                                                 <i className="ri-emotion-happy-line"></i>
                                             </DropdownToggle>
                                             <DropdownMenu className="dropdown-menu-end">
-                                                <EmojiPicker onEmojiClick={onEmojiClick} />
+                                                {
+                                                    selected_user.email !== "bot@mdtamiz.com" ?
+                                                        <EmojiPicker onEmojiClick={onEmojiClick} />
+                                                        :
+                                                        <p className='p-2'>
+                                                            Bot Can't Understand Emoji
+                                                        </p>
+                                                }
                                             </DropdownMenu>
                                         </ButtonDropdown>
                                         <UncontrolledTooltip target="emoji" placement="top">
@@ -192,7 +242,7 @@ function ChatInput(props) {
                                     <li className="list-inline-item input-file">
                                         <Label id="files" className="btn btn-link text-decoration-none font-size-16 btn-lg waves-effect">
                                             <i className="ri-attachment-line"></i>
-                                            <Input onChange={(e) => handleFileChange(e)} type="file" name="fileInput" size="60" />
+                                            <Input disabled={selected_user.email === "bot@mdtamiz.com"} onChange={(e) => handleFileChange(e)} type="file" name="fileInput" size="60" />
                                         </Label>
                                         <UncontrolledTooltip target="files" placement="top">
                                             Attached File
@@ -204,7 +254,10 @@ function ChatInput(props) {
                                             <div className='image-preview border-primary'>
                                                 <img src={fileImage} alt="" />
                                                 <div className='image-title'>
-                                                    <input type="text" value={imageTitle} onChange={(e) => setImageTitle(e.target.value)} className="form-control form-control-sm bg-light border-light" placeholder="Enter Title" />
+                                                    <input type="text" value={imageTitle} onChange={(e) => {
+
+                                                        setShowSugges(false)
+                                                    }} className="form-control form-control-sm bg-light border-light" placeholder="Enter Title" />
                                                     {
                                                         !loading &&
                                                         <div onClick={sendImageMessage} className='btn btn-sm btn-primary'>Send</div>
@@ -232,7 +285,7 @@ function ChatInput(props) {
                                         }
                                         <Label id="images" className="me-1 btn btn-link text-decoration-none font-size-16 btn-lg waves-effect">
                                             <i className="ri-image-fill"></i>
-                                            <Input onChange={(e) => handleImageChange(e)} accept="image/*" type="file" name="fileInput" size="60" />
+                                            <Input disabled={selected_user.email === "bot@mdtamiz.com"} onChange={(e) => handleImageChange(e)} accept="image/*" type="file" name="fileInput" size="60" />
                                         </Label>
                                         <UncontrolledTooltip target="images" placement="top">
                                             Images

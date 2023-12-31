@@ -89,7 +89,7 @@ function Settings(props) {
                 img
             ))
             setChanges(true)
-            const res = await fetch(`https://openly-steady-chigger.ngrok-free.app/api/users/update-img`, {
+            const res = await fetch(`http://localhost:4000/api/users/update-img`, {
                 method: "put",
                 body: formData,
                 headers: {
@@ -114,7 +114,7 @@ function Settings(props) {
 
     const changeName = async (e) => {
         if (name) {
-            const res = await fetch(`https://openly-steady-chigger.ngrok-free.app/api/users/update-one`, {
+            const res = await fetch(`http://localhost:4000/api/users/update-one`, {
                 method: "put",
                 body: JSON.stringify({ data: name, feild_name: "name", email: user.email }),
                 headers: {

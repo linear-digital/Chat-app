@@ -14,7 +14,7 @@ import tone from '../../assets/tone.wav'
 
 
 
-export const socket = io('https://openly-steady-chigger.ngrok-free.app', {
+export const socket = io('http://localhost:4000', {
     transports: ['websocket', 'polling'],
     query: {
         email: getLoggedInUser().user?.email
@@ -49,7 +49,6 @@ const Index = (props) => {
             dispatch(autoFetchMessage(data))
             if (data.receiver === user?.email) {
                 payNotification()
-
             }
         })
         // Clean up when the component unmounts

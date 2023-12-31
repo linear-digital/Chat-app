@@ -7,7 +7,7 @@ import request from '../../helpers/request'
 const DefaultFetch = ({ user }) => {
 
     const { refetch, selected_user, auto_fetch_message } = useSelector(state => state.ChatPro)
-    //https://openly-steady-chigger.ngrok-free.app/api/chats/get
+    //http://localhost:4000/api/chats/get
     const dispatch = useDispatch()
     useEffect(() => {
         (

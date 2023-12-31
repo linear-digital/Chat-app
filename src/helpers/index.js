@@ -1,6 +1,6 @@
 
 
-export const server_URL = "https://openly-steady-chigger.ngrok-free.app"
+export const server_URL = "http://localhost:4000"
 
 export const headers = {
     'Content-Type': 'application/json',

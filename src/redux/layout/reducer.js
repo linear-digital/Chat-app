@@ -10,7 +10,7 @@ import {
 const INIT_STATE = {
 	activeTab : "chat",
 	userSidebar : false,
-	conversationName : "Doris Brown",
+	conversationName : "User",
 	layoutMode : "light"
 };
 

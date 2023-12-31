@@ -91,3 +91,20 @@
     bottom: 100px;
     left: 20px;
 }
+.botmessage-template{
+    position: absolute;
+    bottom: 100px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    justify-items: center;
+    width: 100%;
+    z-index: 1040;
+    padding: 10px;
+}
+.cursor-pointer{
+    cursor: pointer;
+}
+.pb-6{
+    padding-bottom: 20px;
+}

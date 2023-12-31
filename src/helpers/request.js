@@ -4,8 +4,8 @@ const METHODS = {
     PUT: 'PUT',
     DELETE: 'DELETE'
 }
-// const url = "https://openly-steady-chigger.ngrok-free.app/api"
-const url = "https://openly-steady-chigger.ngrok-free.app/api"
+// const url = "http://localhost:4000/api"
+const url = "http://localhost:4000/api"
 
 export const headers = {
     'Content-Type': 'application/json',

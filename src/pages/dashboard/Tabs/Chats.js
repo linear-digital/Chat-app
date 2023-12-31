@@ -13,6 +13,7 @@ import { setconversationNameInOpenChat, activeUser, setFriends, selectedChatUser
 import OnlineUsers from "./OnlineUsers";
 import AddFriend from './AddFriend';
 import RecentCard from './RecentCard';
+import ChatBot from '../../../components/ChatBot';
 
 
 class Chats extends Component {
@@ -126,7 +127,17 @@ class Chats extends Component {
     }
 
     render() {
-
+        const bot = {
+            id: 1,
+            name: "Web Helper Bot",
+            email: "bot@mdtamiz.com",
+            photo: 'https://cwatch.comodo.com/images/web-bot-software.png',
+            cover: "",
+            relo: "",
+            info: "Hi",
+            location: "Maijdee Courte",
+            status: "online"
+        }
         return (
             <React.Fragment>
                 <div>
@@ -164,6 +175,7 @@ class Chats extends Component {
                         <SimpleBar className="chat-message-list">
 
                             <ul className="list-unstyled chat-list chat-user-list px-2" id="chat-list">
+                                <ChatBot chat={bot} onClick={(e , usr) => this.openUserChat(e, usr)} />
                                 {
                                     this.props.friends &&
                                     this.props.friends?.map((chat, index) => (

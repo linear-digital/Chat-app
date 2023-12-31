@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DropdownMenu, DropdownItem, DropdownToggle, UncontrolledDropdown, Modal, ModalHeader, ModalBody, CardBody, Button, ModalFooter } from "reactstrap";
 import { connect } from "react-redux";
+// import 'monaco-editor/esm/vs/editor/editor.all.css';
+
 
 import SimpleBar from "simplebar-react";
 
@@ -26,6 +28,7 @@ import NoUserSelected from './NoUserSelected';
 import request from '../../../helpers/request';
 import FilePreview from './FilePreview';
 import axios from 'axios';
+import MonacoEditor from 'react-monaco-editor';
 
 function UserChat(props) {
 
@@ -110,6 +113,7 @@ function UserChat(props) {
             </a>
         ));
     };
+
     return (
         <React.Fragment>
             <div className="user-chat w-100 overflow-hidden">
@@ -126,7 +130,7 @@ function UserChat(props) {
                             ref={ref}
                             className="chat-conversation p-5 p-lg-4"
                         >
-                            <ul className="list-unstyled mb-0" id="messages" ref={(el) => {
+                            <ul className="list-unstyled mb-5" id="messages" ref={(el) => {
                                 if (el) {
                                     setHeght(el.scrollHeight)
                                 }
@@ -135,7 +139,7 @@ function UserChat(props) {
                                     messages?.map((chat, key) => {
                                         return <div key={key}>
                                             {
-                                                chat.sender === user.email ?
+                                                chat.sender === user?.email ?
                                                     <li key={key} className={"right"}>
                                                         <div className="conversation-list">
 
@@ -226,6 +230,28 @@ function UserChat(props) {
                                                                             </p>
                                                                         }
                                                                         {
+                                                                            chat.type === "code" &&
+                                                                            <p className="mb-0">
+                                                                                {
+                                                                                    chat.status === "deleted"
+                                                                                        ?
+                                                                                        <span className='deleted'>{chat.status}</span>
+                                                                                        :
+                                                                                        // <MonacoEditor
+                                                                                        //     width="800"
+                                                                                        //     height="600"
+                                                                                        //     language="javascript"
+                                                                                        //     theme="vs-dark" // or 'light'
+                                                                                        //     value={chat.message}
+                                                                                        //     options={{ selectOnLineNumbers: true }}
+                                                                                        //     onChange={() => { }}
+                                                                                        // />
+                                                                                        <p style={{ whiteSpace: 'pre-wrap', maxWidth: "500px", }} >{chat.message}</p>
+                                                                                }
+
+                                                                            </p>
+                                                                        }
+                                                                        {
                                                                             chat.type === "image" &&
                                                                             // image list component
                                                                             <ImageList images={[chat.image]} />
@@ -244,7 +270,7 @@ function UserChat(props) {
                                                                             </DropdownToggle>
                                                                             <DropdownMenu>
                                                                                 {
-                                                                                    chat.type === "text" &&
+                                                                                    chat.type === "text" || "code" &&
                                                                                     <DropdownItem onClick={() => navigator.clipboard.writeText(chat.message)}>{t('Copy')} <i className="ri-file-copy-line float-end text-muted"></i></DropdownItem>
                                                                                 }
                                                                                 {

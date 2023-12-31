@@ -82,7 +82,7 @@ function UserProfileSidebar(props) {
 
                     </div>
 
-                    <h5 className="font-size-16 mb-1 text-truncate">{props.activeUser.name}</h5>
+                    <h5 className="font-size-16 mb-1 text-truncate">{selected_user?.name}</h5>
                     <p className="text-muted text-truncate mb-1">
                         {(() => {
                             switch (selected_user.status) {

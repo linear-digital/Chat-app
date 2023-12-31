@@ -168,7 +168,7 @@ function UserHead(props) {
                             <img src={user} alt="" className="img-thumbnail rounded-circle" />
                         </div>
 
-                        <h5 className="text-truncate">Doris Brown</h5>
+                        <h5 className="text-truncate">{selected.name}</h5>
                         <p className="text-muted">Start Audio Call</p>
 
                         <div className="mt-5">
